@@ -330,6 +330,18 @@ SELECT a.first_name as nombre, a.last_name as apellido
 
 
 -- 19 Encuentra el título de todas las películas que son "R" y tienen una duración mayor a 2 horas en la tabla film.
+-- query de comprobación--
+SELECT *
+	FROM film;
+
+SELECT title as pelicula, rating as clasificción, length as duración -- alias opcionales / rating y length para comprobar output
+	FROM film
+		WHERE rating like "%R%"  AND length > 120; -- que cumplan ambas condiciones
+        
+ -- query final según lo solicitado--  
+ SELECT title 
+	FROM film
+		WHERE rating like "%R%"  AND length > 120; 
 
 -- 20 Encuentra las categorías de películas que tienen un promedio de duración superior a 120 minutos y muestra el nombre de la categoría junto con el promedio de duración.
 
