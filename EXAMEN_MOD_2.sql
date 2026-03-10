@@ -388,6 +388,7 @@ SELECT DISTINCT a.first_name as nombre, count(f.film_id) -- alias opcionales / c
     GROUP BY a.first_name, a.actor_id;-- agrupar
     
 --  ------------------------------------------------------------------------
+-- intento con un having para filtar los que quiero mostrar luego de agrupar
 SELECT a.first_name AS nombre, COUNT(f.film_id) as total_peliculas 
 	FROM actor AS a
 	INNER JOIN film_actor AS fa
@@ -407,12 +408,58 @@ SELECT a.first_name AS nombre, COUNT(f.film_id) as total_peliculas
     GROUP BY a.first_name, a.actor_id
     HAVING COUNT(f.film_id)> 5; 
 
--- 22.Encuentra el título de todas las películas que fueron alquiladas por más de 5 días. Utiliza una subconsulta para encontrar los rental_ids con una duración superior a 5 días y luego selecciona las películas correspondientes.
+/*22.Encuentra el título de todas las películas que fueron alquiladas por más de 5 días.
+Utiliza una subconsulta para encontrar los rental_ids con una duración superior a 5 días y luego selecciona las películas correspondientes.*/
+-- query de comprobación--
+-- Tablas necesarias: 1)film -> 2)inventory -> 3) rental 
 
--- 23 Encuentra el nombre y apellido de los actores que no han actuado en ninguna película de la categoría "Horror". Utiliza una subconsulta para encontrar los 
--- actores que han actuado en películas de la categoría "Horror" y luego exclúyelos de la lista de actores.
+-- sub sonsulta --
+SELECT DATEDIFF(r.return_date, r.rental_date) AS duración_dias
+	FROM rental r;
+    
+-- consulta pp --
+SELECT distinct f.title as titulo_pelicula
+	FROM film f
+	INNER JOIN inventory i  
+		ON f.film_id = i.film_id;
+        
+ -- completa --       
+SELECT distinct f.title as titulo_pelicula -- NO ME DA ACCESO A RENTAL DESDE ACA AUNQUE ESTÁ RELACIONADO EN SUB PARA AGG DATEDIFF(r.return_date, r.rental_date) as duración_dias 
+	FROM film f
+	INNER JOIN inventory i  
+		ON f.film_id = i.film_id  -- Relación 1
+	WHERE i.inventory_id IN ( SELECT r.inventory_id   -- relación 2 entrando a subconsulta  / me paso a la subconsulta como si fuese un on
+							 FROM rental r
+							 WHERE DATEDIFF(r.return_date, r.rental_date) > 5);
+                             
+-- AGREGANDO UN INNER ADICIONAL ME TRAIGO LA TABLA DE RENTAL Y SI PUEDO HACER QUE APAREZCAN LOS DIAS 					
+SELECT DISTINCT title AS titulo_pelicula,DATEDIFF(r.return_date, r.rental_date) as duración_dias 
+		FROM film AS f
+		INNER JOIN inventory AS i
+			ON F.film_id = i.film_id
+		INNER JOIN rental AS r
+			ON i.inventory_id = r.inventory_id
+		WHERE r.rental_id IN (SELECT rental_id
+								FROM rental
+								WHERE DATEDIFF(return_date, rental_date) > 5);                    
+							
+-- query final según lo solicitado---
+SELECT distinct f.title 
+	FROM film f
+	INNER JOIN inventory i  
+		ON f.film_id = i.film_id 
+	WHERE i.inventory_id IN ( SELECT r.inventory_id   
+							 FROM rental r
+							 WHERE DATEDIFF(r.return_date, r.rental_date) > 5);    
+    
 
--- 24 . Encuentra el título de las películas que son comedias y tienen una duración mayor a 180 minutos en la tabla film.
+/* 23 Encuentra el nombre y apellido de los actores que no han actuado en ninguna película de la categoría "Horror".
+ Utiliza una subconsulta para encontrar los actores que han actuado en películas de la categoría "Horror" y luego exclúyelos de la lista de actore*/
+
+SELECT * 
+	FROM actor 
+
+/* 24 . Encuentra el título de las películas que son comedias y tienen una duración mayor a 180 minutos en la tabla film*/
 
 
    
