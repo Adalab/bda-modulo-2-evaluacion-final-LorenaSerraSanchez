@@ -225,9 +225,25 @@ SELECT a.first_name, a.last_name
 
 
 -- 14 Muestra el título de todas las películas que contengan la palabra "dog" o "cat" en su descripción
-
+-- query de comprobación--
+SELECT *
+	FROM film
+	LIMIT 5;
+    
+SELECT title AS titulo_pelicula, description AS descripción -- alias opcionales / description reservado pero funciona
+	FROM film
+    WHERE description like "%dog%" or "%cat%"; -- que en la descripción sea "%valor_solicitado%"
+    
+-- query final según lo solicitado--
+    
+SELECT title
+	FROM film
+    WHERE description like "%dog%" or "%cat%"; 
+    
 -- 15 Encuentra el título de todas las películas que fueron alquiladas por más de 5 días. Utiliza una subconsulta para encontrar los rental_ids con una duración 
 -- superior a 5 días y luego selecciona las películas correspondientes
+
+
 
 -- 16 Encuentra el título de todas las películas que fueron lanzadas entre el año 2005 y 2010.
 
