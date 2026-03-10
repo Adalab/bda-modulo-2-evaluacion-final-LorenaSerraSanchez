@@ -372,8 +372,40 @@ SELECT c.name as nombre, avg(f.length) as promedio_duración
  		
 
 -- 21 Encuentra los actores que han actuado en al menos 5 películas y muestra el nombre del actor junto con la cantidad de películas en las que han actuado.
-
-
+-- query de comprobación--
+-- Tablas necesarias: 1)actor -> 2)film_actor -> 3) film
+SELECT *
+	FROM actor;
+    
+-- intenté primero con disntinct pero no elimina los duplicados
+SELECT DISTINCT a.first_name as nombre, count(f.film_id) -- alias opcionales / count cuenta cuantas peliculas por actor
+	FROM actor AS a
+	INNER JOIN film_actor AS fa 
+		ON a.actor_id = fa.actor_id
+	INNER JOIN film AS f 
+		ON f.film_id = fa.film_id
+	WHERE f.film_id > 5
+    GROUP BY a.first_name, a.actor_id;-- agrupar
+    
+--  ------------------------------------------------------------------------
+SELECT a.first_name AS nombre, COUNT(f.film_id) as total_peliculas 
+	FROM actor AS a
+	INNER JOIN film_actor AS fa
+		ON 	a.actor_id = fa.actor_id -- relación 1
+	INNER JOIN film AS f
+		ON f.film_id = fa.film_id -- relación 2
+    GROUP BY a.first_name, a.actor_id -- agrupar por nombre y el actor_id es unico
+    HAVING COUNT(f.film_id)> 5; -- filtro los que son mayor a 5 peliculas
+	
+-- query final según lo solicitado--
+SELECT a.first_name AS nombre, COUNT(f.film_id) as total_peliculas 
+	FROM actor AS a
+	INNER JOIN film_actor AS fa
+		ON 	a.actor_id = fa.actor_id 
+	INNER JOIN film AS f
+		ON f.film_id = fa.film_id 
+    GROUP BY a.first_name, a.actor_id
+    HAVING COUNT(f.film_id)> 5; 
 
 -- 22.Encuentra el título de todas las películas que fueron alquiladas por más de 5 días. Utiliza una subconsulta para encontrar los rental_ids con una duración superior a 5 días y luego selecciona las películas correspondientes.
 
