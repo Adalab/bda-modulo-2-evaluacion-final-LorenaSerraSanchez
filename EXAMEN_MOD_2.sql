@@ -414,7 +414,7 @@ Utiliza una subconsulta para encontrar los rental_ids con una duración superior
 -- Tablas necesarias: 1)film -> 2)inventory -> 3) rental 
 
 -- sub consulta --
-SELECT DATEDIFF(return_date, rental_date) AS duración_dias
+SELECT DATEDIFF(return_date, rental_date) AS duración_dias -- datediff para sacar la diferencia entre la fecha de alquiler y retorno
 	FROM rental ;
     
 -- consulta pp --
@@ -444,7 +444,7 @@ SELECT DISTINCT title AS titulo_pelicula,DATEDIFF(r.return_date, r.rental_date) 
 								WHERE DATEDIFF(return_date, rental_date) > 5);                    
 							
 -- query final según lo solicitado---
-SELECT distinct f.title 
+SELECT DISTINCT f.title 
 	FROM film f
 	INNER JOIN inventory i  
 		ON f.film_id = i.film_id 
@@ -491,7 +491,7 @@ WHERE a.actor_id NOT IN (SELECT fa.actor_id
 -- query de comprobación--
 -- Tablas necesarias: 1)film -> film_category -> 3) category 
 
-SELECT title as titulo_pelicula, length as duración
+SELECT title as titulo_pelicula, length as duración -- alias opcionales 
 	FROM film AS f
 	INNER JOIN film_category as fc
 		ON f.film_id = fc.film_id
@@ -501,23 +501,39 @@ SELECT title as titulo_pelicula, length as duración
     
     
 -- query final según lo solicitado---    
-SELECT 
-    title
-FROM
-    film AS f
-        INNER JOIN
-    film_category AS fc ON f.film_id = fc.film_id
-        INNER JOIN
-    category AS c ON c.category_id = fc.category_id
-WHERE
-    c.name LIKE '%comedy%'
-        AND f.length > 180;
+SELECT title
+FROM film AS f
+	INNER JOIN film_category AS fc ON f.film_id = fc.film_id
+        INNER JOIN category AS c ON c.category_id = fc.category_id
+	WHERE c.name LIKE '%comedy%'AND f.length > 180;
 
 
 ##### BONUSS  #####
 
- /* ejercicio 25: Encuentra todos los actores que han actuado juntos en al menos una película. La consulta debe mostrar el nombre y apellido de los actores y el número
- de películas en las que han actuado juntos.*/  
+ /* ejercicio 25: Encuentra todos los actores que han actuado juntos en al menos una película. 
+ La consulta debe mostrar el nombre y apellido de los actores y el número de películas en las que han actuado juntos.*/  
+ -- query de comprobación--
+-- TABLAS: 1) FILM_ACTOR -> 2) FILM
+-- DEDO COMPARAR LA CONSULTA CONSIGO MISMA PARA SABER QUE LOS ACTORES HAN TRABAJADO ENTRE ELLOS / ORIGINAL A+B , DEBO CONVERTIR -> A1,A2/B1+B2
+
+select  a1.first_name as actor_1, a1.last_name as apellido_1, 
+		 a2.first_name as actor_2, a2.last_name as apellido_2, COUNT(a1.actor_id) as peliculas_juntos -- 
+	FROM film_actor fa1
+	INNER JOIN film_actor fa2
+		ON fa1.film_id = fa2.film_id AND fa1.actor_id < fa2.actor_id -- and y > para evitar que columna de tabla 1 se compare consigo mismo
+	INNER JOIN actor a1
+		ON fa1.actor_id = a1.actor_id
+	INNER JOIN actor a2
+		ON fa2.actor_id = a2.actor_id
+	GROUP BY a1.actor_id,a2.actor_id -- Agrupo por pares de actores
+    ORDER BY COUNT(a1.actor_id) ASC; -- ORDENO DE FORMA ASCENDENTE / EL MAYOR DE COINCIDENCIAS ES DE 7
+
    
-		
+    
+    
+	
+	
+    
+
+
 
