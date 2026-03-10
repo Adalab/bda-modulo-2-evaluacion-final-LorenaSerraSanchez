@@ -157,52 +157,10 @@ SELECT  c.customer_id, c.first_name, c.last_name, count(rental_id) as recuento_a
     GROUP BY c.customer_id, c.first_name, c.last_name;
     
 -- 11 Encuentra la cantidad total de películas alquiladas por categoría y muestra el nombre de la categoría junto con el recuento de alquileres.
--- query de comprobación-- 
-
--- Tras revisar el esquema he determinado las que necesitaré para el ejercicio
--- Tablas necesarias: 1) category -> 2)film_category -> 3)film -> inventory -> 4)rental    
-SELECT c.name AS categoria, COUNT(r.rental_id) AS total_alquileres -- count por rental_id porque es un valor único por cada alquiler
-	FROM category AS c
-	INNER JOIN film_category AS fc
-		ON c.category_id = fc.category_id -- unión 1
-	INNER JOIN film as f
-		ON fc.film_id = f.film_id-- unión 2
-	INNER JOIN inventory as i
-		ON f.film_id = i.film_id -- unión 3
-	INNER JOIN rental as r
-		ON i.inventory_id = r.inventory_id-- unión 4
-	GROUP BY c.name;
-    
--- query final según lo solicitado--
-SELECT c.name, COUNT(r.rental_id) AS total_alquileres
-	FROM category AS c
-	INNER JOIN film_category AS fc
-		ON c.category_id = fc.category_id 
-	INNER JOIN film as f
-		ON fc.film_id = f.film_id
-	INNER JOIN inventory as i
-		ON f.film_id = i.film_id
-	INNER JOIN rental as r
-		ON i.inventory_id = r.inventory_id
-	GROUP BY c.name;
-
 
 -- 12 Encuentra el promedio de duración de las películas para cada clasificación de la tabla film y muestra la clasificación junto con el promedio de duración
--- query de comprobación-- 
-SELECT *
-	FROM film;
-    
-SELECT rating as clasificación, AVG (length) as promedio_duración -- AVG PARA BUSCAR PROMEDIOS
-	FROM film
-	GROUP BY rating; -- agrupamos por clasificación
-    
--- query final según lo solicitado--
-SELECT rating as clasificación, AVG (length) as promedio_duración 
-	FROM film
-    GROUP BY rating; 
 
 -- 13 Encuentra el nombre y apellido de los actores que aparecen en la película con title "Indian Love"
-
  -- Tablas: actor / puente: film_actor (actor_id)  / puente: film (film_id)
 
 -- 14 Muestra el título de todas las películas que contengan la palabra "dog" o "cat" en su descripción
