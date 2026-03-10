@@ -413,7 +413,7 @@ Utiliza una subconsulta para encontrar los rental_ids con una duración superior
 -- query de comprobación--
 -- Tablas necesarias: 1)film -> 2)inventory -> 3) rental 
 
--- sub sonsulta --
+-- sub consulta --
 SELECT DATEDIFF(return_date, rental_date) AS duración_dias
 	FROM rental ;
     
@@ -457,28 +457,31 @@ SELECT distinct f.title
  Utiliza una subconsulta para encontrar los actores que han actuado en películas de la categoría "Horror" y luego exclúyelos de la lista de actores*/
 -- query de comprobación--
 -- Tablas necesarias: 1)actor -> 2)film_actor -> 3) film -> 4) film_category -> 5) category 
-SELECT category_id, name
-	FROM category;
+
+SELECT DISTINCT first_name as nombre, last_name as apellido
+	FROM actor;
     
  -- sub consulta --   
-SELECT film_id
-	FROM film_category AS fc
+SELECT fa.actor_id
+	FROM film_actor AS fa
+	INNER JOIN film_category AS fc
+		ON fa.film_id = fc.film_id
 	INNER JOIN category AS c
 		ON fc.category_id = c.category_id
 	WHERE c.name = 'Horror';
     
  -- consulta pp --  
-SELECT DISTINCT first_name AS Nombre, last_name AS Apellido
+SELECT first_name AS Nombre, last_name AS Apellido
 	FROM actor;
 
 
  -- query final según lo solicitado---                           
-SELECT DISTINCT a.first_name AS Nombre, a.last_name AS Apellido
+SELECT a.first_name as nombre, a.last_name as apellido
 FROM actor AS a
-INNER JOIN film_actor AS fa
-    ON a.actor_id = fa.actor_id
-WHERE fa.film_id NOT IN (SELECT fc.film_id
-							FROM film_category AS fc
+WHERE a.actor_id NOT IN (SELECT fa.actor_id
+							FROM film_actor AS fa
+							INNER JOIN film_category AS fc
+								ON fa.film_id = fc.film_id
 							INNER JOIN category AS c
 								ON fc.category_id = c.category_id
 							WHERE c.name = 'Horror');
@@ -515,5 +518,6 @@ WHERE
 
  /* ejercicio 25: Encuentra todos los actores que han actuado juntos en al menos una película. La consulta debe mostrar el nombre y apellido de los actores y el número
  de películas en las que han actuado juntos.*/  
-
+   
+		
 
