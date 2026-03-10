@@ -512,12 +512,14 @@ FROM film AS f
 
  /* ejercicio 25: Encuentra todos los actores que han actuado juntos en al menos una película. 
  La consulta debe mostrar el nombre y apellido de los actores y el número de películas en las que han actuado juntos.*/  
+ 
  -- query de comprobación--
 -- TABLAS: 1) FILM_ACTOR -> 2) FILM
--- DEDO COMPARAR LA CONSULTA CONSIGO MISMA PARA SABER QUE LOS ACTORES HAN TRABAJADO ENTRE ELLOS / ORIGINAL A+B , DEBO CONVERTIR -> A1,A2/B1+B2
+-- DEBO COMPARAR LA CONSULTA CONSIGO MISMA PARA SABER QUE LOS ACTORES HAN TRABAJADO ENTRE ELLOS / ORIGINAL A+B , DEBO CONVERTIR -> A1,A2/B1,B2
 
 select  a1.first_name as actor_1, a1.last_name as apellido_1, 
-		 a2.first_name as actor_2, a2.last_name as apellido_2, COUNT(a1.actor_id) as peliculas_juntos -- 
+		 a2.first_name as actor_2, a2.last_name as apellido_2, 
+         COUNT(a1.actor_id) as peliculas_juntos -- 
 	FROM film_actor fa1
 	INNER JOIN film_actor fa2
 		ON fa1.film_id = fa2.film_id AND fa1.actor_id < fa2.actor_id -- and y > para evitar que columna de tabla 1 se compare consigo mismo
