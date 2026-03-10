@@ -414,8 +414,8 @@ Utiliza una subconsulta para encontrar los rental_ids con una duración superior
 -- Tablas necesarias: 1)film -> 2)inventory -> 3) rental 
 
 -- sub sonsulta --
-SELECT DATEDIFF(r.return_date, r.rental_date) AS duración_dias
-	FROM rental r;
+SELECT DATEDIFF(return_date, rental_date) AS duración_dias
+	FROM rental ;
     
 -- consulta pp --
 SELECT distinct f.title as titulo_pelicula
@@ -454,12 +454,58 @@ SELECT distinct f.title
     
 
 /* 23 Encuentra el nombre y apellido de los actores que no han actuado en ninguna película de la categoría "Horror".
- Utiliza una subconsulta para encontrar los actores que han actuado en películas de la categoría "Horror" y luego exclúyelos de la lista de actore*/
+ Utiliza una subconsulta para encontrar los actores que han actuado en películas de la categoría "Horror" y luego exclúyelos de la lista de actores*/
+-- query de comprobación--
+-- Tablas necesarias: 1)actor -> 2)film_actor -> 3) film -> 4) film_category -> 5) category 
+SELECT category_id, name
+	FROM category;
+    
+ -- sub consulta --   
+SELECT film_id
+	FROM film_category AS fc
+	INNER JOIN category AS c
+		ON fc.category_id = c.category_id
+	WHERE c.name = 'Horror';
+    
+ -- consulta pp --  
+SELECT DISTINCT first_name AS Nombre, last_name AS Apellido
+	FROM actor;
 
-SELECT * 
-	FROM actor 
+
+ -- query final según lo solicitado---                           
+SELECT DISTINCT a.first_name AS Nombre, a.last_name AS Apellido
+FROM actor AS a
+INNER JOIN film_actor AS fa
+    ON a.actor_id = fa.actor_id
+WHERE fa.film_id NOT IN (SELECT fc.film_id
+							FROM film_category AS fc
+							INNER JOIN category AS c
+								ON fc.category_id = c.category_id
+							WHERE c.name = 'Horror');
+	
 
 /* 24 . Encuentra el título de las películas que son comedias y tienen una duración mayor a 180 minutos en la tabla film*/
+-- query de comprobación--
+-- Tablas necesarias: 1)film -> film_category -> 3) category 
 
+SELECT title as titulo_pelicula, length as duración
+	FROM film AS f
+	INNER JOIN film_category as fc
+		ON f.film_id = fc.film_id
+	INNER JOIN category as c
+		ON c.category_id = fc.category_id
+	WHERE c.name like "%comedy%" AND f.length > 180;
+    
+    
+-- query final según lo solicitado---    
+SELECT title 
+	FROM film AS f
+	INNER JOIN film_category as fc
+		ON f.film_id = fc.film_id
+	INNER JOIN category as c
+		ON c.category_id = fc.category_id
+	WHERE c.name like "%comedy%" AND f.length > 180;
 
    
+
+
