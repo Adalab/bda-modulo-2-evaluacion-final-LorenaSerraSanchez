@@ -202,8 +202,27 @@ SELECT rating as clasificación, AVG (length) as promedio_duración
     GROUP BY rating; 
 
 -- 13 Encuentra el nombre y apellido de los actores que aparecen en la película con title "Indian Love"
+-- query de comprobación-- 
+-- Tras revisar el esquema he determinado las que necesitaré para el ejercicio
+-- Tablas: 1) actor -> 2) film_actor -> 3) film
 
- -- Tablas: actor / puente: film_actor (actor_id)  / puente: film (film_id)
+SELECT a.first_name as nombre, a.last_name as apellido , f.title as titulo_pelicula -- alias opcionales / titulo para corroborar output
+	FROM actor AS a
+    INNER JOIN film_actor AS fa
+		ON a.actor_id = fa.actor_id -- union 1
+   INNER JOIN film AS f
+		ON fa.film_id = f.film_id -- union 2
+	WHERE f.title LIKE "%Indian Love%"; 
+
+-- query final según lo solicitado--
+SELECT a.first_name, a.last_name
+	FROM actor AS a
+    INNER JOIN film_actor AS fa
+		ON a.actor_id = fa.actor_id
+   INNER JOIN film AS f
+		ON fa.film_id = f.film_id
+	WHERE f.title LIKE "%Indian Love%";
+
 
 -- 14 Muestra el título de todas las películas que contengan la palabra "dog" o "cat" en su descripción
 
