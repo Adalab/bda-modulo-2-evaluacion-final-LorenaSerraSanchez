@@ -261,7 +261,7 @@ SELECT a.actor_id, a.first_name
 	WHERE fa.film_id is null;   
 	
 
--- 16 Encuentra el título de todas las películas que fueron lanzadas entre el año 2005 y 2010.
+-- ejercicio 16: Encuentra el título de todas las películas que fueron lanzadas entre el año 2005 y 2010.
 -- query de comprobación--
 SELECT *
 	FROM film; 
@@ -275,7 +275,7 @@ SELECT title
 	FROM film
     WHERE release_year >=2005 AND release_year <= 2010;
 
--- 17 Encuentra el título de todas las películas que son de la misma categoría que "Family".
+-- ejercicio 17: Encuentra el título de todas las películas que son de la misma categoría que "Family".
 -- query de comprobación--
 -- tablas necesarias: 1) film -> 2) film_category -> 3) category
 
@@ -299,7 +299,7 @@ SELECT f.title
 		ON 	fc.category_id = c.category_id 
 		WHERE c.name like "Family";         
     
--- 18 Muestra el nombre y apellido de los actores que aparecen en más de 10 películas.
+-- ejercicio 18: Muestra el nombre y apellido de los actores que aparecen en más de 10 películas.
 -- query de comprobación--
 -- Tablas necesarias 1) actor 2) film_actor 3) film
 SELECT *
@@ -329,7 +329,7 @@ SELECT a.first_name as nombre, a.last_name as apellido
 		WHERE  f.film_id > 10;
 
 
--- 19 Encuentra el título de todas las películas que son "R" y tienen una duración mayor a 2 horas en la tabla film.
+-- Ejercicio 19: Encuentra el título de todas las películas que son "R" y tienen una duración mayor a 2 horas en la tabla film.
 -- query de comprobación--
 SELECT *
 	FROM film;
@@ -343,7 +343,7 @@ SELECT title as pelicula, rating as clasificción, length as duración -- alias 
 	FROM film
 	WHERE rating like "%R%"  AND length > 120; 
 
--- 20 Encuentra las categorías de películas que tienen un promedio de duración superior a 120 minutos *** y muestra el nombre de la categoría junto con el promedio de duración.
+-- ejercicio 20: Encuentra las categorías de películas que tienen un promedio de duración superior a 120 minutos *** y muestra el nombre de la categoría junto con el promedio de duración.
 -- query de comprobación--
 -- Tablas necesarias: 1)Category -> 2) film_category -> 3) film
 SELECT *
@@ -371,7 +371,7 @@ SELECT c.name as nombre, avg(f.length) as promedio_duración
     GROUP BY c.name;        
  		
 
--- 21 Encuentra los actores que han actuado en al menos 5 películas y muestra el nombre del actor junto con la cantidad de películas en las que han actuado.
+-- Ejercicio 21: Encuentra los actores que han actuado en al menos 5 películas y muestra el nombre del actor junto con la cantidad de películas en las que han actuado.
 -- query de comprobación--
 -- Tablas necesarias: 1)actor -> 2)film_actor -> 3) film
 SELECT *
@@ -408,7 +408,7 @@ SELECT a.first_name AS nombre, COUNT(f.film_id) as total_peliculas
     GROUP BY a.first_name, a.actor_id
     HAVING COUNT(f.film_id)> 5; 
 
-/*22.Encuentra el título de todas las películas que fueron alquiladas por más de 5 días.
+/* Ejercicio 22: Encuentra el título de todas las películas que fueron alquiladas por más de 5 días.
 Utiliza una subconsulta para encontrar los rental_ids con una duración superior a 5 días y luego selecciona las películas correspondientes.*/
 -- query de comprobación--
 -- Tablas necesarias: 1)film -> 2)inventory -> 3) rental 
@@ -453,7 +453,7 @@ SELECT distinct f.title
 							 WHERE DATEDIFF(r.return_date, r.rental_date) > 5);    
     
 
-/* 23 Encuentra el nombre y apellido de los actores que no han actuado en ninguna película de la categoría "Horror".
+/* Ejercicio 23: Encuentra el nombre y apellido de los actores que no han actuado en ninguna película de la categoría "Horror".
  Utiliza una subconsulta para encontrar los actores que han actuado en películas de la categoría "Horror" y luego exclúyelos de la lista de actores*/
 -- query de comprobación--
 -- Tablas necesarias: 1)actor -> 2)film_actor -> 3) film -> 4) film_category -> 5) category 
@@ -484,7 +484,7 @@ WHERE fa.film_id NOT IN (SELECT fc.film_id
 							WHERE c.name = 'Horror');
 	
 
-/* 24 . Encuentra el título de las películas que son comedias y tienen una duración mayor a 180 minutos en la tabla film*/
+/* Ejercicio 24: . Encuentra el título de las películas que son comedias y tienen una duración mayor a 180 minutos en la tabla film*/
 -- query de comprobación--
 -- Tablas necesarias: 1)film -> film_category -> 3) category 
 
@@ -498,14 +498,22 @@ SELECT title as titulo_pelicula, length as duración
     
     
 -- query final según lo solicitado---    
-SELECT title 
-	FROM film AS f
-	INNER JOIN film_category as fc
-		ON f.film_id = fc.film_id
-	INNER JOIN category as c
-		ON c.category_id = fc.category_id
-	WHERE c.name like "%comedy%" AND f.length > 180;
+SELECT 
+    title
+FROM
+    film AS f
+        INNER JOIN
+    film_category AS fc ON f.film_id = fc.film_id
+        INNER JOIN
+    category AS c ON c.category_id = fc.category_id
+WHERE
+    c.name LIKE '%comedy%'
+        AND f.length > 180;
 
-   
+
+##### BONUSS  #####
+
+ /* ejercicio 25: Encuentra todos los actores que han actuado juntos en al menos una película. La consulta debe mostrar el nombre y apellido de los actores y el número
+ de películas en las que han actuado juntos.*/  
 
 
