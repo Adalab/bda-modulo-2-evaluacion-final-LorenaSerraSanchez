@@ -156,7 +156,7 @@ SELECT  c.customer_id, c.first_name, c.last_name, count(rental_id) as recuento_a
     ON c.customer_id = r.customer_id
     GROUP BY c.customer_id, c.first_name, c.last_name;
     
--- 11 Encuentra la cantidad total de películas alquiladas por categoría y muestra el nombre de la categoría junto con el recuento de alquileres.
+-- Ejercicio 11: Encuentra la cantidad total de películas alquiladas por categoría y muestra el nombre de la categoría junto con el recuento de alquileres.
 -- query de comprobación-- 
 
 -- Tras revisar el esquema he determinado las que necesitaré para el ejercicio
@@ -187,7 +187,7 @@ SELECT c.name, COUNT(r.rental_id) AS total_alquileres
 	GROUP BY c.name;
 
 
--- 12 Encuentra el promedio de duración de las películas para cada clasificación de la tabla film y muestra la clasificación junto con el promedio de duración
+-- ejercicio 12: Encuentra el promedio de duración de las películas para cada clasificación de la tabla film y muestra la clasificación junto con el promedio de duración
 -- query de comprobación-- 
 SELECT *
 	FROM film;
@@ -201,7 +201,7 @@ SELECT rating as clasificación, AVG (length) as promedio_duración
 	FROM film
     GROUP BY rating; 
 
--- 13 Encuentra el nombre y apellido de los actores que aparecen en la película con title "Indian Love"
+-- Ejercicio 13: Encuentra el nombre y apellido de los actores que aparecen en la película con title "Indian Love"
 -- query de comprobación-- 
 -- Tras revisar el esquema he determinado las que necesitaré para el ejercicio
 -- Tablas: 1) actor -> 2) film_actor -> 3) film
@@ -224,7 +224,7 @@ SELECT a.first_name, a.last_name
 	WHERE f.title LIKE "%Indian Love%";
 
 
--- 14 Muestra el título de todas las películas que contengan la palabra "dog" o "cat" en su descripción
+-- Ejercicio 14: Muestra el título de todas las películas que contengan la palabra "dog" o "cat" en su descripción
 -- query de comprobación--
 SELECT *
 	FROM film
@@ -240,16 +240,94 @@ SELECT title
 	FROM film
     WHERE description like "%dog%" or "%cat%"; 
     
--- 15 Encuentra el título de todas las películas que fueron alquiladas por más de 5 días. Utiliza una subconsulta para encontrar los rental_ids con una duración 
--- superior a 5 días y luego selecciona las películas correspondientes
-
-
+-- Ejercicio 15: Hay algún actor o actriz que no aparezca en ninguna película en la tabla film_actor.
+-- query de comprobación--
+-- tablas necesarias: 1) actor 2) film_actor 
+SELECT *
+	FROM actor
+	LIMIT 5;
+    
+SELECT a.actor_id, a.first_name as nombre -- alias opcional
+	FROM actor AS a
+    LEFT JOIN film_actor as fa  -- left join porque si quiero los nombres completos de actores y comprobar si no estan en alguna pelicula
+		ON a.actor_id =	fa.actor_id
+	WHERE fa.film_id is null; -- is null para encontrar los vacios / no hay vacios
+    
+-- query final según lo solicitado--   
+SELECT a.actor_id, a.first_name
+	FROM actor AS a
+    LEFT JOIN film_actor as fa  
+		ON a.actor_id =	fa.actor_id
+	WHERE fa.film_id is null;   
+	
 
 -- 16 Encuentra el título de todas las películas que fueron lanzadas entre el año 2005 y 2010.
+-- query de comprobación--
+SELECT *
+	FROM film; 
+	
+SELECT title AS pelicula, release_year as año_estreno
+	FROM film
+    WHERE release_year >=2005 AND release_year <= 2010;    
+
+-- query final según lo solicitado--
+SELECT title
+	FROM film
+    WHERE release_year >=2005 AND release_year <= 2010;
 
 -- 17 Encuentra el título de todas las películas que son de la misma categoría que "Family".
+-- query de comprobación--
+-- tablas necesarias: 1) film -> 2) film_category -> 3) category
 
+SELECT *
+	FROM category;
+    
+SELECT f.title as titulo_pelicula, c.name as categoria -- alias opcionales / 
+	FROM film as f
+    INNER JOIN film_category as fc
+		ON f.film_id = fc.film_id -- relación  1
+    INNER JOIN category as c
+		ON 	fc.category_id = c.category_id -- relación 2
+		WHERE c.name like "Family";  -- valor a buscar  "Family"
+
+-- query final según lo solicitado--		
+SELECT f.title
+	FROM film as f
+    INNER JOIN film_category as fc
+		ON f.film_id = fc.film_id 
+    INNER JOIN category as c
+		ON 	fc.category_id = c.category_id 
+		WHERE c.name like "Family";         
+    
 -- 18 Muestra el nombre y apellido de los actores que aparecen en más de 10 películas.
+-- query de comprobación--
+-- Tablas necesarias 1) actor 2) film_actor 3) film
+SELECT *
+	FROM actor;
+    
+SELECT *
+	FROM film;
+
+
+SELECT a.first_name as nombre, a.last_name as apellido, count(f.film_id) AS total_peliculas -- alias opcionales / conteo de peliculas para comprobar
+	FROM actor as a
+		INNER JOIN film_actor as fa
+			ON a.actor_id = fa.actor_id -- relación 1
+		INNER JOIN film as f
+			ON fa.film_id = f.film_id -- relación 2
+		WHERE  f.film_id > 10
+        GROUP BY a.first_name, a.last_name 
+		ORDER BY a.first_name ASC ;
+		
+ -- query final según lo solicitado--   
+SELECT a.first_name as nombre, a.last_name as apellido 
+	FROM actor as a
+		INNER JOIN film_actor as fa
+			ON a.actor_id = fa.actor_id 
+		INNER JOIN film as f
+			ON fa.film_id = f.film_id 
+		WHERE  f.film_id > 10;
+
 
 -- 19 Encuentra el título de todas las películas que son "R" y tienen una duración mayor a 2 horas en la tabla film.
 
